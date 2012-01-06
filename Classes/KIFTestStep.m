@@ -515,7 +515,12 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
 + (NSArray *)stepsToChoosePhotoInAlbum:(NSString *)albumName atRow:(NSInteger)row column:(NSInteger)column;
 {
     NSMutableArray *steps = [NSMutableArray array];
+
+#if TARGET_IPHONE_SIMULATOR
+    [steps addObject:[KIFTestStep stepToTapViewWithAccessibilityLabel:@"Photos"]];
+#else
     [steps addObject:[KIFTestStep stepToTapViewWithAccessibilityLabel:@"Choose Photo"]];
+#endif    
     
     // This is basically the same as the step to tap with an accessibility label except that the accessibility labels for the albums have the number of photos appended to the end, such as "My Photos (3)." This means that we have to do a prefix match rather than an exact match.
     NSString *description = [NSString stringWithFormat:@"Select the \"%@\" photo album", albumName];
@@ -559,7 +564,11 @@ static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
     [steps addObject:[KIFTestStep stepToTapScreenAtPoint:thumbnailCenter]];
     
     // Dismiss the resize UI
+#if TARGET_IPHONE_SIMULATOR
+    // Do nothing.
+#else
     [steps addObject:[KIFTestStep stepToTapViewWithAccessibilityLabel:@"Choose"]];
+#endif
     
     return steps;
 }
